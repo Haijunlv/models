@@ -12,12 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""NCF Constants."""
 
-TRAIN_RATINGS_FILENAME = 'train-ratings.csv'
-TEST_RATINGS_FILENAME = 'test-ratings.csv'
-TEST_NEG_FILENAME = 'test-negative.csv'
+"""Utilities that interact with cloud service.
+"""
 
-USER = "user_id"
-ITEM = "item_id"
-RATING = "rating"
+import requests
+
+GCP_METADATA_URL = "http://metadata/computeMetadata/v1/instance/hostname"
+GCP_METADATA_HEADER = {"Metadata-Flavor": "Google"}
+
+
+def on_gcp():
+  """Detect whether the current running environment is on GCP."""
+  try:
+    response = requests.get(GCP_METADATA_URL, headers=GCP_METADATA_HEADER)
+    return response.status_code == 200
+  except requests.exceptions.RequestException:
+    return False

@@ -1,3 +1,17 @@
+# Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 r"""A script that builds boosted trees over higgs data.
 
 If you haven't, please run data_download.py beforehand to prepare the data.
@@ -210,7 +224,8 @@ def train_boosted_trees(flags_obj):
   benchmark_logger.log_run_info(
       model_name="boosted_trees",
       dataset_name="higgs",
-      run_params=run_params)
+      run_params=run_params,
+      test_id=flags_obj.benchmark_test_id)
 
   # Though BoostedTreesClassifier is under tf.estimator, faster in-memory
   # training is yet provided as a contrib library.
@@ -243,7 +258,9 @@ def main(_):
 
 def define_train_higgs_flags():
   """Add tree related flags as well as training/eval configuration."""
-  flags_core.define_base(stop_threshold=False, batch_size=False, num_gpu=False)
+  flags_core.define_base(clean=False, stop_threshold=False, batch_size=False,
+                         num_gpu=False)
+  flags_core.define_benchmark()
   flags.adopt_module_key_flags(flags_core)
 
   flags.DEFINE_integer(
